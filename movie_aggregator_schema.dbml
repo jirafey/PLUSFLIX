@@ -1,0 +1,145 @@
+Enum user_role {
+  user
+  moderator
+}
+
+Enum media_type {
+  movie
+  series
+}
+
+Enum person_role {
+  actor
+  director
+  writer
+  producer
+  other
+}
+
+Enum language_usage {
+  original
+  dub
+  subtitle
+  forced_subtitle
+  cc
+  ad
+}
+
+Enum availability_type {
+  subscription
+  rental
+  purchase
+  free
+  tvod
+}
+
+Table users {
+  id bigint [pk]
+  username varchar [not null, unique]
+  password_hash varchar [not null]
+  role user_role [not null, default: 'user'] // możliwe: user, moderator
+}
+
+Table categories {
+  id bigint [pk]
+  name varchar [not null, unique]
+  description text
+}
+
+Table languages {
+  id bigint [pk]
+  iso_code char(2) [not null, unique]
+  name varchar [not null]
+}
+
+Table streaming_services {
+  id bigint [pk]
+  name varchar [not null, unique]
+  website varchar
+}
+
+Table media_items {
+  id bigint [pk]
+  title varchar [not null]
+  original_title varchar
+  type media_type [not null] // media_type: movie | series
+  description text
+  release_date date
+  runtime_minutes int
+  poster_url varchar
+  thumbnail_url varchar
+}
+
+Table media_categories {
+  media_id bigint [pk]
+  category_id bigint [pk]
+}
+
+Table persons {
+  id bigint [pk]
+  name varchar [not null]
+  birth_date date
+  bio text
+}
+
+Table media_persons {
+  media_id bigint [pk]
+  person_id bigint [pk]
+  role person_role [pk] // person_role: actor, director, writer, producer, other
+  character_name varchar
+}
+
+Table media_languages {
+  media_id bigint [pk]
+  language_id bigint [pk]
+  usage language_usage [pk] // language_usage: original, dub, subtitle, etc.
+}
+
+Table service_availabilities {
+  id bigint [pk]
+  media_id bigint [not null]
+  service_id bigint [not null]
+  available_from timestamp
+  available_to timestamp
+  type availability_type
+  url varchar
+  quality varchar
+  price numeric(10,2)
+  currency char(3)
+}
+
+Table reviews {
+  id bigint [pk]
+  media_id bigint [not null]
+  user_id bigint [not null]
+  rating numeric(3,2)
+  title varchar
+  body text
+  is_spoiler boolean [default: false]
+  created_at timestamp [not null, default: 'now()']
+  updated_at timestamp
+}
+
+Table collections {
+  id bigint [pk]
+  name varchar [not null]
+  description text
+}
+
+Table collection_items {
+  collection_id bigint [pk]
+  media_id bigint [pk]
+}
+
+Ref: media_categories.media_id > media_items.id // media -> media_items (m:n)
+Ref: media_categories.category_id > categories.id // media -> categories (m:n)
+Ref: media_persons.media_id > media_items.id
+Ref: media_persons.person_id > persons.id
+Ref: media_languages.media_id > media_items.id
+Ref: media_languages.language_id > languages.id
+Ref: service_availabilities.media_id > media_items.id
+Ref: service_availabilities.service_id > streaming_services.id
+Ref: reviews.media_id > media_items.id
+Ref: reviews.user_id > users.id
+Ref: collection_items.collection_id > collections.id
+Ref: collection_items.media_id > media_items.id

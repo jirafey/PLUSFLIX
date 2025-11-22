@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Streaming{% endblock %}
+
+{% block body %}
+    <h1>Edit Streaming</h1>
+
+    {{ include('streaming/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_streaming_index') }}">back to list</a>
+
+    {{ include('streaming/_delete_form.html.twig') }}
+{% endblock %}

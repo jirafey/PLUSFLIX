@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Streaming index{% endblock %}
+
+{% block body %}
+    <h1>Streaming index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Website</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for streaming in streamings %}
+            <tr>
+                <td>{{ streaming.id }}</td>
+                <td>{{ streaming.name }}</td>
+                <td>{{ streaming.website }}</td>
+                <td>
+                    <a href="{{ path('app_streaming_show', {'id': streaming.id}) }}">show</a>
+                    <a href="{{ path('app_streaming_edit', {'id': streaming.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_streaming_new') }}">Create new</a>
+{% endblock %}
