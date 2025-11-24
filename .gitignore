@@ -4,6 +4,8 @@
 /.idea/
 /.idea/*
 *.iml
+.env.local
+
 /.env.local.php
 /.env.*.local
 /config/secrets/prod/prod.decrypt.private.php
@@ -21,3 +23,9 @@
 /public/assets/
 /assets/vendor/
 ###< symfony/asset-mapper ###
+
+
+composer.phar
+dbml-error.log
+*.log
+
